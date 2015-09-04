@@ -1,0 +1,40 @@
+<!-- HTML5 declaration-->
+<!DOCTYPE html> 
+<html> 
+<head>
+	<link rel="icon" type="image/png" href="img/favicon-happy.png" />
+	<link rel="stylesheet" type="text/css" href="css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="css/minesweeper.css" />
+	<title>Minesweeper</title>
+</head>
+<body>
+	<div id="game">
+		<div id="header">
+			<div id="header-menu">
+				<div id="options">Options</div>
+				<div id="options-drop-down" class="hidden">
+					<ul>
+						<li id="new-game" class="swp">New Game</li>
+						<li id="beginner" class="swp selected">Beginner</li>
+						<li id="intermediate" class="swp">Intermediate</li>
+						<li id="advanced" class="swp">Advanced</li>
+					</ul>
+				</div>
+			</div>
+			<div id="header-info"></div>
+		</div>
+		<div id="minefield"></div>
+	</div>
+
+  <!--<script type="text/javascript" src="js/vendor/jquery-2.1.4.min.js"></script>-->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="js/minesweeper.js"></script>
+  <script type="text/javascript">
+    (function ( $ ) {
+
+      $('#minefield').minesweeper();
+
+    }( jQuery ));
+  </script>
+</body>
+</html>

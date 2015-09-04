@@ -1,0 +1,265 @@
+/* application- wide */
+body {
+	font-family:Andalus;
+	cursor:default;
+}
+
+.body-min-height-beginner {
+	min-height:540px;
+}
+
+.body-min-height-int-adv {
+	min-height:790px;
+}
+
+/* wrapper for header & minesweeper game */
+#game {
+	position:absolute;
+	top:30px;
+	left:0px;
+	min-width:512px;
+	max-width:960px;
+	padding:20px;
+	background-color:#EDEDED;
+}
+
+#minefield {
+	margin:0 auto;
+	border:1px solid #B2B2B2;
+}
+
+#veil {
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:50;
+	background-color:#000000;
+	opacity:0.5;
+}
+
+#veil-text {
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:51;
+	text-align:center;
+	width:256px;
+	color:#04FE04;
+	font-weight:bolder;
+	font-size:32px;
+}
+
+.hidden {
+	display:none;
+}
+
+.beginner {
+	width:256px;
+	height:256px;
+}
+
+.intermediate {
+	width:512px;
+	height:512px;
+}
+
+.advanced {
+	width:960px;
+	height:512px;
+}
+
+#header {
+	height:110px;
+}
+
+.header-beg-int {
+	width:512px;
+}
+
+.header-advanced {
+	width:960px;
+}
+
+#header-menu {
+	background-color:#D4D4D4;
+	width:98%;
+	height:27px;
+	padding:5px;
+}
+
+#options {
+	text-align:center;
+	width:120px;
+	cursor:pointer;
+	background-color:#EDEDED;
+}
+
+#options:hover {
+	background-color:#A8FFFF;
+}
+
+.option-menu-visible {
+	background-color:#A8FFFF;
+}
+
+#options-drop-down {
+	position:fixed;
+	margin-top:5px;
+	width:100px;
+	background-color:white;
+	z-index:1000;
+	cursor:pointer;
+	padding:10px;
+}
+
+#options-drop-down ul li {
+	padding-left:10px;
+	margin-bottom:2px;
+}
+
+#options-drop-down ul li:hover, #options-drop-down ul li.selected {
+	background-color:#A8FFFF;
+}
+
+#new-game-icon {
+	margin-top:15px;
+	margin-left:46%;
+	cursor:pointer;
+}
+
+#header-info {
+	width:100%;
+}
+
+#unmarked-mines {
+	float:left;
+	margin-top:-5px;
+}
+
+#timer {
+	float:right;
+	margin-top:-50px;
+}
+
+.digital-numbers {
+	background-color:#000000;
+	width:92px;
+}
+
+.digital-numbers img {
+	margin-top:5px;
+	margin-left:5px;
+}
+
+.tile {
+	float:left;
+	height:32px;
+	width:32px;
+}
+
+.tile-released {
+	height:30px;
+	width:30px;
+	border:1px solid #B2B2B2;
+	font-weight:bolder;
+	font-size:23px;
+	text-align:center;
+}
+
+.tile-initialised {
+	background-image:url('../img/tile-initialised.png');
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+
+.mine-found {
+	background-image:url('../img/mine-found.png');
+	background-repeat:no-repeat;
+	cursor:auto;
+}
+
+.marked-mine {
+	background-image:url('../img/marked-mine.png');
+	background-repeat:no-repeat;
+}
+
+.mine-wrong {
+	background-image:url('../img/mine-wrong.png');
+	background-repeat:no-repeat;
+}
+
+.maybe-mine {
+	background-image:url('../img/maybe-mine.png');
+	background-repeat:no-repeat;
+}
+
+.nmc-1 {
+	/*blue*/
+	color:#0000FF;;
+}
+
+.nmc-2 {
+	/*green*/
+	color:#008000;
+}
+
+.nmc-3 {
+	/*red*/
+	color:#FF0000;
+}
+
+.nmc-4 {
+	/*dark blue*/
+	color:#0000A0;
+}
+
+.nmc-5 {
+	/*maroon*/
+	color:#800000;
+}
+
+.nmc-6 {
+	/*turquoise*/
+	color:#43C6DB;
+}
+
+.nmc-7 {
+	/*black*/
+	color:#000000;
+}
+
+.nmc-8 {
+	/*grey*/
+	color:#808080;
+}
+
+footer{
+	position:fixed;
+	bottom:0px;
+	left:0px;
+	z-index:1001;
+	width:100%;
+	height:60px;
+	background-color:#A61212;
+	color:#DEDEDE;
+}
+
+#publisher {
+	width:100%;
+	text-align:center;
+}
+
+#publisher a {
+	color:#FFFFFF;
+}
+
+#publisher a:hover {
+	color:#DEDEDE;
+}
+
+#publisher-img img {
+	padding-top:10px;
+	margin-top:-10px;
+	width:30px;
+	height:30px;
+}
