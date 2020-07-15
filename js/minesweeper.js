@@ -1,26 +1,818 @@
-window.gameType;window.countAcross;window.countDown;window.noOfTiles;window.noOfMines;window.countNoOfMines;window.setMines = new Array();window.timerStarted;window.timerId;window.timer;window.releasedTiles;window.tileNeighbours;window.releasedTilesCount;window.tileNeighboursCount;window.leftClickTimeStamp;window.rightClickTimeStamp;
-function positionGame(){$('#game').css('left',(($(window).width()/2)-($('#game').width()/2))+'px');}
-function positionVeil(){if($('#veil').length>0){var minefieldOffset=$('#minefield').offset();$('#veil').css('top',minefieldOffset.top+'px').css('left',minefieldOffset.left+'px');var veilTextTop=minefieldOffset.top+($('#minefield').height()/2)-40;var veilTextLeft=minefieldOffset.left+($('#minefield').width()/2)-($('#veil-text').width()/2);$('#veil-text').css('top',veilTextTop+'px').css('left',veilTextLeft+'px');}}
-function updateMinesLeft(){var mineCounter=0;switch(window.minesLeft.toString().length){case 1:mineCounter=0;$('#unmarked-mines img').each(function(){mineCounter++;if(mineCounter<3){$(this).attr('src','img/0.png');}else{$(this).attr('src','img/'+window.minesLeft+'.png');}});break;case 2:var digitsMinesLeft=window.minesLeft.toString().split('');mineCounter=0;$('#unmarked-mines img').each(function(){mineCounter++;if(mineCounter<2){$(this).attr('src','img/0.png');}else{$(this).attr('src','img/'+digitsMinesLeft[mineCounter-2]+'.png');}});break;default:var digitsMinesLeft=window.minesLeft.toString().split('');mineCounter=0;$('#unmarked-mines img').each(function(){$(this).attr('src','img/'+digitsMinesLeft[mineCounter]+'.png');mineCounter++;});}}
-function newGameImageChange(face){$('#new-game-icon img').attr('src','img/new-game-'+face+'.png');if(face==='uh-oh'){setTimeout(function(){$('#new-game-icon img').attr('src','img/new-game-happy.png');},100);}}
-function startGame(){window.timerStarted=true;window.timerId=setInterval(function(){window.timer++;switch(window.timer.toString().length){case 1:$('#timer img:nth-child(1)').attr('src','img/0.png');$('#timer img:nth-child(2)').attr('src','img/0.png');$('#timer img:nth-child(3)').attr('src','img/'+window.timer+'.png');break;case 2:var digits=window.timer.toString().split('');$('#timer img:nth-child(1)').attr('src','img/0.png');$('#timer img:nth-child(2)').attr('src','img/'+digits[0]+'.png');$('#timer img:nth-child(3)').attr('src','img/'+digits[1]+'.png');break;case 3:var digits=window.timer.toString().split('');$('#timer img:nth-child(1)').attr('src','img/'+digits[0]+'.png');$('#timer img:nth-child(2)').attr('src','img/'+digits[1]+'.png');$('#timer img:nth-child(3)').attr('src','img/'+digits[2]+'.png');break;default:stopTimer();$('#timer img').each(function(){$(this).attr('src','img/9.png');});}},1000);}
-function stopTimer(){clearInterval(window.timerId);}
-function addVeil(winLose){var minefieldClass='';switch(window.gameType){case 1:minefieldClass='beginner';break;case 2:minefieldClass='intermediate';break;default:minefieldClass='advanced';}$('body').prepend('<div id="veil" class="hidden '+minefieldClass+'"></div><div id="veil-text" class="hidden"><span></span></div>');if(winLose==='win'){$('#veil-text span').append('You Won!');}else{$('#veil-text span').append('You Hit A Mine!');}positionVeil();$('#veil').fadeIn('fast');$('#veil-text').fadeIn('fast');}
-function stopGame(winLose){stopTimer();if(winLose==='lose'){setTimeout(function(){newGameImageChange('sad');},100);addVeil('lose');}else{addVeil('win');}}
-function isGameOverYet(){if($('.tile-released').length===(window.noOfTiles-window.noOfMines)){stopGame('win');}}
-function getNeighbourIds(tileId){var neighbourIds=new Array();var countNs=0;var neighboursAbove=false;var neighboursBelow=false;var neighboursLeft=false;var neighboursRight=false;if((tileId-1)>0&&(tileId%window.countAcross)!==1){neighboursLeft=true;if($.inArray((tileId-1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId-1);countNs++;}}if((tileId+1)<=window.noOfTiles&&(tileId%window.countAcross)!==0){neighboursRight=true;if($.inArray((tileId+1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId+1);countNs++;}}if((tileId-window.countAcross)>0){neighboursAbove=true;if($.inArray((tileId-window.countAcross),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId-window.countAcross);countNs++;}}if((tileId+window.countAcross)<=window.noOfTiles){neighboursBelow=true;if($.inArray((tileId+window.countAcross),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId+window.countAcross);countNs++;}}if(neighboursLeft===true&&neighboursAbove===true&&$.inArray((tileId-window.countAcross-1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId-window.countAcross-1);countNs++;}if(neighboursRight===true&&neighboursAbove===true&&$.inArray((tileId-window.countAcross+1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId-window.countAcross+1);countNs++;}if(neighboursLeft===true&&neighboursBelow===true&&$.inArray((tileId+window.countAcross-1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId+window.countAcross-1);countNs++;}if(neighboursRight===true&&neighboursBelow===true&&$.inArray((tileId+window.countAcross+1),window.releasedTiles)===-1){neighbourIds[countNs]=(tileId+window.countAcross+1);countNs++;}return neighbourIds;}
-function releaseNeighbours(tileId){var tileNeighbours=getNeighbourIds(tileId);$.each(tileNeighbours,function(index,value){if($.inArray(value,window.releasedTiles)===-1){if(!$('#'+value).hasClass('marked-mine')&&!$('#'+value).hasClass('tile-released')){if($('#'+value).hasClass('maybe-mine')){$('#'+value).removeClass('maybe-mine');}$('#'+value).removeClass('tile-initialised').addClass('tile-released');isGameOverYet();window.releasedTiles[window.releasedTilesCount]=value;window.releasedTilesCount++;var countCloseMines=countNeighbourMines(value);if(countCloseMines>0&&countCloseMines<9){$('#'+value).addClass('touching-mines').addClass('nmc-'+countCloseMines).append(countCloseMines);}else if(countCloseMines===0){$('#' + value).off('mouseup');releaseNeighbours(value);}}}});}
-function countNeighbourMines(tileId){var countNMs=0;var neighboursAbove=false;var neighboursBelow=false;var neighboursLeft=false;var neighboursRight=false;if((tileId-1)>0&&(tileId%window.countAcross)!==1){neighboursLeft=true;if($.inArray((tileId-1),window.setMines)!==-1){countNMs++;}}if((tileId+1)<=window.noOfTiles&&(tileId%window.countAcross)!==0){neighboursRight=true;if($.inArray((tileId+1),window.setMines)!==-1){countNMs++;}}if((tileId-window.countAcross)>0){neighboursAbove=true;if($.inArray((tileId-window.countAcross),window.setMines)!==-1){countNMs++;}}if((tileId+window.countAcross)<=window.noOfTiles){neighboursBelow=true;if($.inArray((tileId+window.countAcross),window.setMines)!==-1){countNMs++;}}if(neighboursLeft===true&&neighboursAbove===true){if($.inArray((tileId-window.countAcross-1),window.setMines)!==-1){countNMs++;}}if(neighboursRight===true&&neighboursAbove===true){if($.inArray((tileId-window.countAcross+1),window.setMines)!==-1){countNMs++;}}if(neighboursLeft===true&&neighboursBelow===true){if($.inArray((tileId+window.countAcross-1),window.setMines)!==-1){countNMs++;}}if(neighboursRight===true&&neighboursBelow===true){if($.inArray((tileId+window.countAcross+1),window.setMines)!==-1){countNMs++;}}return countNMs;}
-function countMarkedNeighbourMines(tileId){var countMNMs=0;var neighboursAbove=false;var neighboursBelow=false;var neighboursLeft=false;var neighboursRight=false;if((tileId-1)>0&&(tileId%window.countAcross)!==1){neighboursLeft=true;if($('#'+(tileId-1)).hasClass('marked-mine')){countMNMs++;}}if((tileId+1)<=window.noOfTiles&&(tileId%window.countAcross)!==0){neighboursRight=true;if($('#'+(tileId+1)).hasClass('marked-mine')){countMNMs++;}}if((tileId-window.countAcross)>0){neighboursAbove=true;if($('#'+(tileId-window.countAcross)).hasClass('marked-mine')){countMNMs++;}}if((tileId+window.countAcross)<=window.noOfTiles){neighboursBelow=true;if($('#'+(tileId+window.countAcross)).hasClass('marked-mine')){countMNMs++;}}if(neighboursLeft===true&&neighboursAbove===true){if($('#'+(tileId-window.countAcross-1)).hasClass('marked-mine')){countMNMs++;}}if(neighboursRight===true&&neighboursAbove===true){if($('#'+(tileId-window.countAcross+1)).hasClass('marked-mine')){countMNMs++;}}if(neighboursLeft===true&&neighboursBelow===true){if($('#'+(tileId+window.countAcross-1)).hasClass('marked-mine')){countMNMs++;}}if(neighboursRight===true&&neighboursBelow===true){if($('#'+(tileId+window.countAcross+1)).hasClass('marked-mine')){countMNMs++;}}return countMNMs;}
-function releaseTilesNotMarked(tileId){var neighbourTiles=getNeighbourIds(tileId);var noMineTouching=new Array();var noMineTouchingCount=0;$.each(neighbourTiles,function(index,value){if($('#'+value).hasClass('maybe-mine')){$('#'+value).removeClass('maybe-mine');}if($('#'+value).hasClass('marked-mine')&&$.inArray(value,window.setMines)!==-1){}else if($('#'+value).hasClass('marked-mine')&&$.inArray(value,window.setMines)===-1){$('#'+value).addClass('mine-wrong');}else if(!$('#'+value).hasClass('marked-mine')&&$.inArray(value,window.setMines)!==-1){$('#'+value).removeClass('tile-initialised').addClass('mine-found');$('.tile').off('mouseup');stopGame('lose');}else{$('#'+value).removeClass('tile-initialised').addClass('tile-released');isGameOverYet();window.releasedTiles[window.releasedTilesCount]=value;window.releasedTilesCount++;var countCloseMines=countNeighbourMines(value);if(countCloseMines>0&&countCloseMines<9){$('#'+value).addClass('touching-mines').addClass('nmc-'+countCloseMines).append(countCloseMines);}else if(countCloseMines===0){$('#'+value).off('mouseup');noMineTouching[noMineTouchingCount]=value;noMineTouchingCount++;}}});if(noMineTouchingCount>0){$.each(noMineTouching,function(index,value){releaseNeighbours(value);});}}
-function leftClick(tileId){if(!$('#'+tileId).hasClass('marked-mine')&&!$('#'+tileId).hasClass('tile-released')){if($('#'+tileId).hasClass('maybe-mine')){$('#'+tileId).removeClass('maybe-mine');}if($.inArray(tileId,window.setMines)!==-1){$('#'+tileId).addClass('mine-found');$('.tile').off('mouseup');stopGame('lose');}else{newGameImageChange('uh-oh');$('#'+tileId).addClass('tile-released');isGameOverYet();window.releasedTiles[window.releasedTilesCount]=tileId;window.releasedTilesCount++;if(window.timerStarted!==true){startGame();}var countCloseMines=countNeighbourMines(tileId);if(countCloseMines>0&&countCloseMines<9){$('#'+tileId).addClass('touching-mines').addClass('nmc-'+countCloseMines).append(countCloseMines);}else if(countCloseMines===0){$('#'+tileId).off('mouseup');releaseNeighbours(tileId);}}}}
-function rightClick(tileId){if(!$('#'+tileId).hasClass('tile-released')){if($('#'+tileId).hasClass('marked-mine')){$('#'+tileId).removeClass('marked-mine');$('#'+tileId).addClass('maybe-mine');window.minesLeft++;}else if($('#'+tileId).hasClass('maybe-mine')){$('#'+tileId).removeClass('maybe-mine');}else{$('#'+tileId).addClass('marked-mine');window.minesLeft--;if(window.timerStarted!==true){startGame();}}updateMinesLeft();}}
-function middleClick(tileId){newGameImageChange('uh-oh');if($('#'+tileId).hasClass('tile-released')&&($('#'+tileId).hasClass('nmc-1')||$('#'+tileId).hasClass('nmc-2')||$('#'+tileId).hasClass('nmc-3')||$('#'+tileId).hasClass('nmc-4')||$('#'+tileId).hasClass('nmc-5')||$('#'+tileId).hasClass('nmc-6')||$('#'+tileId).hasClass('nmc-7')||$('#'+tileId).hasClass('nmc-8'))){var noOfCloseMines=0;var classList=$('#'+tileId).attr('class').split(' ');$.each(classList,function(index,value){if(value.indexOf('nmc-')!==-1){noOfCloseMines=parseInt(value.replace('nmc-',''));}});if(noOfCloseMines<=countMarkedNeighbourMines(tileId)){releaseTilesNotMarked(tileId);}}}
-function setMineClickAction(){$('.tile').each(function(){$(this).mousedown(function(ev){if(ev.which===1){if($(this).hasClass('tile-initialised')){$(this).removeClass('tile-initialised');var currentTileId=$(this).attr('id');$(this).mouseleave(function(){setTimeout(function(){if(!$('#'+currentTileId).hasClass('tile-released')){$('#'+currentTileId).addClass('tile-initialised');}},15);});}}});$(this).mouseup(function(event){var tileId=parseInt($(this).attr('id'));switch(parseInt(event.which)){case 1:if($(this).hasClass('tile-initialised')){$(this).removeClass('tile-initialised');}window.leftClickTimeStamp=new Date().getTime();var difference=0;var msDifference=0;if(window.rightClickTimeStamp!==-1){difference=window.leftClickTimeStamp-window.rightClickTimeStamp;}if(difference>0&&difference<21){middleClick(tileId);}else{setTimeout(function(){if(window.rightClickTimeStamp!==-1){msDifference=rightClickTimeStamp-leftClickTimeStamp;}if(msDifference>0&&msDifference<21){middleClick(tileId);}else{leftClick(tileId);}},20);}break;case 3:window.rightClickTimeStamp=new Date().getTime();var difference=0;var msDifference=0;if(window.leftClickTimeStamp!==-1){difference=window.rightClickTimeStamp-window.leftClickTimeStamp;}if(difference<=0||difference>20){setTimeout(function(){if(window.leftClickTimeStamp!==-1){msDifference=leftClickTimeStamp-rightClickTimeStamp;}if(msDifference<=0||msDifference>20){rightClick(tileId);}},20);}break;default:middleClick(tileId);}});});}
-function setRandomMines(){var randomTile;var alreadyExists=false;window.setMines=new Array();while(window.countNoOfMines<window.noOfMines){randomTileId=Math.floor(Math.random()*window.noOfTiles)+1;if(window.setMines.length>0){alreadyExists=false;$.each(window.setMines,function(index,value){if(value===randomTileId){alreadyExists=true;}});if(alreadyExists===false){window.setMines[window.countNoOfMines]=randomTileId;window.countNoOfMines++;}}else{window.setMines[0]=randomTileId;window.countNoOfMines++;}}}
-function changeMinefieldClass(nextGameType){if($('#minefield').attr('class')!==undefined){$('#minefield').attr('class','');}$('#minefield').addClass(nextGameType);}
-function changeHeaderClass(nextHeaderType){if($('#header').attr('class') !== undefined){$('#header').attr('class','');}$('#header').addClass(nextHeaderType);}
-function buildMineField(){$('#header-info').empty().append('<div id="unmarked-mines" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>' + '<div id="new-game-icon"><img src="img/new-game-happy.png" /></div><div id="timer" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>');$('#minefield').empty();switch(window.gameType){case 2:changeMinefieldClass('intermediate');changeHeaderClass('header-beg-int');break;case 3:changeMinefieldClass('advanced');changeHeaderClass('header-advanced');break;default:changeMinefieldClass('beginner');changeHeaderClass('header-beg-int');}updateMinesLeft();for(var i=1;i<=window.noOfTiles;i++){$('#minefield').append('<div id="'+i+'" class="tile"></div>');}setRandomMines();$('.tile').addClass('tile-initialised');setMineClickAction();positionGame();}
-function initialiseGame(gameLevel){if($('#veil').length>0){$('#veil,#veil-text').remove();}if(window.timerStarted===true){stopTimer();window.timerId=null;}window.gameType=gameLevel;$('#options-drop-down .selected').removeClass('selected');switch(gameLevel){case 2:window.countAcross=16;window.countDown=16;window.noOfMines=40;$('body').attr('class','body-min-height-int-adv');$('#intermediate').addClass('selected');break;case 3:window.countAcross=30;window.countDown=16;window.noOfMines=99;$('body').attr('class','body-min-height-int-adv');$('#advanced').addClass('selected');break;default:window.countAcross=8;window.countDown=8;window.noOfMines=10;$('body').attr('class','body-min-height-beginner');$('#beginner').addClass('selected');}window.noOfTiles=window.countAcross*window.countDown;window.minesLeft=window.noOfMines;window.countNoOfMines=0;window.timerStarted=false;window.timer=0;window.releasedTiles=new Array();window.releasedTilesCount=0;window.leftClickTimeStamp=-1;window.rightClickTimeStamp=-1;buildMineField();}
-function preloadImages(){var imgString='';for(var i=2;i<10;i++){imgString+='<img src="img/'+i+'.png" class="hidden" />';}imgString+='<img src="img/maybe-mine.png" class="hidden" /><img src="img/mine-found.png" class="hidden" /><img src="img/mine-wrong.png" class="hidden" /><img src="img/new-game-sad.png" class="hidden" /><img src="img/new-game-uh-oh.png" class="hidden" />';$('body').append(imgString);}
-$(document).ready(function(){preloadImages();initialiseGame(1);$('body').bind('contextmenu',function(e){return false;});$('#new-game-icon').live('click',function(){initialiseGame(window.gameType);});$('#new-game').click(function(){$('#options-drop-down').hide();initialiseGame(window.gameType);});$('#beginner').click(function() {$('#options-drop-down').hide();initialiseGame(1);});$('#intermediate').click(function(){$('#options-drop-down').hide();initialiseGame(2);});$('#advanced').click(function(){$('#options-drop-down').hide();initialiseGame(3);});$('body').attr('unselectable','on').css('UserSelect','none').css('MozUserSelect','none').on('selectstart',false);$(window).resize(function(){positionGame();positionVeil();});$('#options').click(function(event){if($('#options-drop-down').is(':visible')){$('#options-drop-down').slideUp('fast');event.stopPropagation();}else{$('#options-drop-down').slideDown('fast');event.stopPropagation();}});$('.swp').click(function(e){e.stopPropagation();});$(window).click(function(){if($('#options-drop-down').is(':visible')){$('#options-drop-down').slideUp('fast');}});});
+const Minesweeper = function () {
+  let
+    self = this,
+    elements = {
+      body: $('body'),
+      game: $('#game'),
+      header: $('#header'),
+      headerInfo: $('#header-info'),
+      images: $('#unmarked-mines img'),
+      minefield: $('#minefield'),
+      optionsDropdown: $('#options-drop-down'),
+      tiles: $('.tile'),
+      veil: $('#veil'),
+      veilText: $('#veil-text'),
+    },
+    countAcross,
+    countDown,
+    countNoOfMines,
+    gameType,
+    leftClickTimeStamp,
+    minesLeft,
+    noOfTiles,
+    noOfMines,
+    releasedTiles,
+    releasedTilesCount,
+    rightClickTimeStamp,
+    setMines = [],
+    timerStarted,
+    timerId,
+    timer;
+
+  function positionGame() {
+    elements.game.css('left', (($(window).width() / 2) - (elements.game.width() / 2)) + 'px');
+  }
+
+  function positionVeil() {
+    if (elements.veil.length > 0) {
+      const minefieldOffset = elements.minefield.offset();
+      elements.veil.css('top', minefieldOffset.top + 'px').css('left', minefieldOffset.left + 'px');
+      const veilTextTop = minefieldOffset.top + (elements.minefield.height() / 2) - 40;
+      const veilTextLeft = minefieldOffset.left + (elements.minefield.width() / 2) - (elements.veilText.width() / 2);
+      elements.veilText.css('top', veilTextTop + 'px').css('left', veilTextLeft + 'px');
+    }
+  }
+
+  function updateMinesLeft() {
+    let
+      mineCounter = 0,
+      digitsMinesLeft = '';
+    switch (minesLeft.toString().length) {
+      case 1:
+        mineCounter = 0;
+        elements.images.each(function () {
+          mineCounter++;
+          if (mineCounter < 3) {
+            $(this).attr('src', 'img/0.png');
+            return;
+          }
+          $(this).attr('src', 'img/' + minesLeft + '.png');
+        });
+        break;
+      case 2:
+        digitsMinesLeft = minesLeft.toString().split('');
+        mineCounter = 0;
+        elements.images.each(function () {
+          mineCounter++;
+          if (mineCounter < 2) {
+            $(this).attr('src', 'img/0.png');
+            return;
+          }
+          $(this).attr('src', 'img/' + digitsMinesLeft[mineCounter - 2] + '.png');
+        });
+        break;
+      default:
+        digitsMinesLeft = minesLeft.toString().split('');
+        mineCounter = 0;
+        elements.images.each(function () {
+          $(this).attr('src', 'img/' + digitsMinesLeft[mineCounter] + '.png');
+          mineCounter++;
+        });
+    }
+  }
+
+  function newGameImageChange(face) {
+    $('#new-game-icon img').attr('src', 'img/new-game-' + face + '.png');
+    if (face === 'uh-oh') {
+      setTimeout(function () {
+        $('#new-game-icon img').attr('src', 'img/new-game-happy.png');
+      }, 100);
+    }
+  }
+
+  function startGame() {
+    timerStarted = true;
+    timerId = setInterval(function () {
+      timer++;
+      let
+        digits,
+        first = $('#timer img:nth-child(1)'),
+        second = $('#timer img:nth-child(2)'),
+        third = $('#timer img:nth-child(3)');
+      switch (timer.toString().length) {
+        case 1:
+          first.attr('src', 'img/0.png');
+          second.attr('src', 'img/0.png');
+          third.attr('src', 'img/' + timer + '.png');
+          break;
+        case 2:
+          digits = timer.toString().split('');
+          first.attr('src', 'img/0.png');
+          second.attr('src', 'img/' + digits[0] + '.png');
+          third.attr('src', 'img/' + digits[1] + '.png');
+          break;
+        case 3:
+          digits = timer.toString().split('');
+          first.attr('src', 'img/' + digits[0] + '.png');
+          second.attr('src', 'img/' + digits[1] + '.png');
+          third.attr('src', 'img/' + digits[2] + '.png');
+          break;
+        default:
+          stopTimer();
+          $('#timer img').each(function () {
+            $(this).attr('src', 'img/9.png');
+          });
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerId);
+  }
+
+  function addVeil(winLose) {
+    let minefieldClass = 'advanced';
+    switch (gameType) {
+      case 1:
+        minefieldClass = 'beginner';
+        break;
+      case 2:
+        minefieldClass = 'intermediate';
+        break;
+    }
+
+    elements.body.prepend('<div id="veil" class="hidden ' + minefieldClass + '"></div><div id="veil-text" class="hidden"><span></span></div>');
+    elements.veil = $('#veil');
+    elements.veilText = $('#veil-text');
+
+    if (winLose === 'win') {
+      elements.veilText.find('span').append('You Won!');
+    } else {
+      elements.veilText.find('span').append('You Hit A Mine!');
+    }
+    positionVeil();
+    elements.veil.fadeIn('fast');
+    elements.veilText.fadeIn('fast');
+  }
+
+  function stopGame(winLose) {
+    stopTimer();
+    if (winLose === 'lose') {
+      setTimeout(function () {
+        newGameImageChange('sad');
+      }, 100);
+      addVeil('lose');
+    } else {
+      addVeil('win');
+    }
+  }
+
+  function isGameOverYet() {
+    if ($('.tile-released').length === (noOfTiles - noOfMines)) {
+      stopGame('win');
+    }
+  }
+
+  function getNeighbourIds(tileId) {
+    let
+      neighbourIds = [],
+      countNs = 0,
+      above = false,
+      below = false,
+      left = false,
+      right = false;
+
+    if ((tileId - 1) > 0 && (tileId % countAcross) !== 1) {
+      left = true;
+      if ($.inArray((tileId - 1), releasedTiles) === -1) {
+        neighbourIds[countNs] = (tileId - 1);
+        countNs++;
+      }
+    }
+
+    if ((tileId + 1) <= noOfTiles && (tileId % countAcross) !== 0) {
+      right = true;
+      if ($.inArray((tileId + 1), releasedTiles) === -1) {
+        neighbourIds[countNs] = (tileId + 1);
+        countNs++;
+      }
+    }
+
+    if ((tileId - countAcross) > 0) {
+      above = true;
+      if ($.inArray((tileId - countAcross), releasedTiles) === -1) {
+        neighbourIds[countNs] = (tileId - countAcross);
+        countNs++;
+      }
+    }
+
+    if ((tileId + countAcross) <= noOfTiles) {
+      below = true;
+      if ($.inArray((tileId + countAcross), releasedTiles) === -1) {
+        neighbourIds[countNs] = (tileId + countAcross);
+        countNs++;
+      }
+    }
+
+    if (left && above && $.inArray((tileId - countAcross - 1), releasedTiles) === -1) {
+      neighbourIds[countNs] = (tileId - countAcross - 1);
+      countNs++;
+    }
+
+    if (right && above && $.inArray((tileId - countAcross + 1), releasedTiles) === -1) {
+      neighbourIds[countNs] = (tileId - countAcross + 1);
+      countNs++;
+    }
+
+    if (left && below && $.inArray((tileId + countAcross - 1), releasedTiles) === -1) {
+      neighbourIds[countNs] = (tileId + countAcross - 1);
+      countNs++;
+    }
+
+    if (right && below && $.inArray((tileId + countAcross + 1), releasedTiles) === -1) {
+      neighbourIds[countNs] = (tileId + countAcross + 1);
+      countNs++;
+    }
+
+    return neighbourIds;
+  }
+
+  function releaseNeighbours(tileId) {
+    let tileNeighbours = getNeighbourIds(tileId);
+    $.each(tileNeighbours, function (index, tn) {
+      if ($.inArray(tn, releasedTiles) === -1) {
+        let target = $('#' + tn);
+        if (!target.hasClass('marked-mine') && !target.hasClass('tile-released')) {
+          target
+            .removeClass('maybe-mine')
+            .removeClass('tile-initialised')
+            .addClass('tile-released');
+          isGameOverYet();
+          releasedTiles[releasedTilesCount] = tn;
+          releasedTilesCount++;
+          const countCloseMines = countNeighbourMines(tn);
+          if (countCloseMines > 0 && countCloseMines < 9) {
+            target
+              .addClass('touching-mines')
+              .addClass('nmc-' + countCloseMines)
+              .append(countCloseMines);
+            return;
+          }
+          if (countCloseMines === 0) {
+            target.off('mouseup');
+            releaseNeighbours(tn);
+          }
+        }
+      }
+    });
+
+    $.each(tileNeighbours, function (index, tn) {
+      if ($.inArray(tn, releasedTiles) === -1) {
+        let target = $('#' + tn);
+        if (!target.hasClass('marked-mine') && !target.hasClass('tile-released')) {
+          target
+            .removeClass('maybe-mine')
+            .removeClass('tile-initialised')
+            .addClass('tile-released');
+          isGameOverYet();
+          releasedTiles[releasedTilesCount] = tn;
+          releasedTilesCount++;
+          const countCloseMines = countNeighbourMines(tn);
+          if (countCloseMines > 0 && countCloseMines < 9) {
+            target
+              .addClass('touching-mines')
+              .addClass('nmc-' + countCloseMines)
+              .append(countCloseMines);
+          } else if (countCloseMines === 0) {
+            target.off('mouseup');
+            releaseNeighbours(tn);
+          }
+        }
+      }
+    });
+  }
+
+  function countNeighbourMines(tileId) {
+
+    let
+      countNMs = 0,
+      above = false,
+      below = false,
+      left = false,
+      right = false;
+
+    if ((tileId - 1) > 0 && (tileId % countAcross) !== 1) {
+      left = true;
+      if ($.inArray((tileId - 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if ((tileId + 1) <= noOfTiles && (tileId % countAcross) !== 0) {
+      right = true;
+      if ($.inArray((tileId + 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if ((tileId - countAcross) > 0) {
+      above = true;
+      if ($.inArray((tileId - countAcross), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if ((tileId + countAcross) <= noOfTiles) {
+      below = true;
+      if ($.inArray((tileId + countAcross), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if (left && above) {
+      if ($.inArray((tileId - countAcross - 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if (right && above) {
+      if ($.inArray((tileId - countAcross + 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if (left && below) {
+      if ($.inArray((tileId + countAcross - 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    if (right && below) {
+      if ($.inArray((tileId + countAcross + 1), setMines) !== -1) {
+        countNMs++;
+      }
+    }
+
+    return countNMs;
+  }
+
+  function countMarkedNeighbourMines(tileId) {
+    let
+      countMNMs = 0,
+      above = false,
+      below = false,
+      left = false,
+      right = false;
+
+    if ((tileId - 1) > 0 && (tileId % countAcross) !== 1) {
+      left = true;
+      if ($('#' + (tileId - 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if ((tileId + 1) <= noOfTiles && (tileId % countAcross) !== 0) {
+      right = true;
+      if ($('#' + (tileId + 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if ((tileId - countAcross) > 0) {
+      above = true;
+      if ($('#' + (tileId - countAcross)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if ((tileId + countAcross) <= noOfTiles) {
+      below = true;
+      if ($('#' + (tileId + countAcross)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if (left && above) {
+      if ($('#' + (tileId - countAcross - 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if (right && above) {
+      if ($('#' + (tileId - countAcross + 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if (left && below) {
+      if ($('#' + (tileId + countAcross - 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    if (right && below) {
+      if ($('#' + (tileId + countAcross + 1)).hasClass('marked-mine')) {
+        countMNMs++;
+      }
+    }
+
+    return countMNMs;
+  }
+
+  function releaseTilesNotMarked(tileId) {
+    let
+      neighbourTiles = getNeighbourIds(tileId),
+      noMineTouching = [],
+      noMineTouchingCount = 0;
+    $.each(neighbourTiles, function (index, value) {
+      let target = $('#' + value);
+      if (target.hasClass('maybe-mine')) {
+        target.removeClass('maybe-mine');
+      }
+
+      if (target.hasClass('marked-mine') && $.inArray(value, setMines) !== -1) {
+        return;
+      }
+      if (target.hasClass('marked-mine') && $.inArray(value, setMines) === -1) {
+        target.addClass('mine-wrong');
+        return;
+      }
+
+      if (!target.hasClass('marked-mine') && $.inArray(value, setMines) !== -1) {
+        target.removeClass('tile-initialised').addClass('mine-found');
+        $('.tile').off('mouseup');
+        stopGame('lose');
+        return;
+      }
+
+      target.removeClass('tile-initialised').addClass('tile-released');
+      isGameOverYet();
+      releasedTiles[releasedTilesCount] = value;
+      releasedTilesCount++;
+
+      let countCloseMines = countNeighbourMines(value);
+
+      if (countCloseMines > 0 && countCloseMines < 9) {
+        target.addClass('touching-mines').addClass('nmc-' + countCloseMines).append(countCloseMines);
+        return;
+      }
+
+      if (countCloseMines === 0) {
+        target.off('mouseup');
+        noMineTouching[noMineTouchingCount] = value;
+        noMineTouchingCount++;
+      }
+    });
+
+    if (noMineTouchingCount > 0) {
+      $.each(noMineTouching, function (index, value) {
+        releaseNeighbours(value);
+      });
+    }
+  }
+
+  function leftClick(tileId) {
+    let target = $('#' + tileId);
+
+    if (target.hasClass('marked-mine') || target.hasClass('tile-released')) {
+      return;
+    }
+
+    if (target.hasClass('maybe-mine')) {
+      target.removeClass('maybe-mine');
+    }
+
+    if ($.inArray(tileId, setMines) !== -1) {
+      target.addClass('mine-found');
+      $('.tile').off('mouseup');
+      stopGame('lose');
+      return;
+    }
+
+    newGameImageChange('uh-oh');
+    target.addClass('tile-released');
+    isGameOverYet();
+    releasedTiles[releasedTilesCount] = tileId;
+    releasedTilesCount++;
+
+    if (!timerStarted) {
+      startGame();
+    }
+
+    const countCloseMines = countNeighbourMines(tileId);
+
+    if (countCloseMines > 0 && countCloseMines < 9) {
+      target.addClass('touching-mines').addClass('nmc-' + countCloseMines).append(countCloseMines);
+      return;
+    }
+
+    if (countCloseMines === 0) {
+      target.off('mouseup');
+      releaseNeighbours(tileId);
+    }
+  }
+
+  function rightClick(tileId) {
+    let target = $('#' + tileId);
+    if (target.hasClass('tile-released')) {
+      return;
+    }
+    if (target.hasClass('marked-mine')) {
+      target.removeClass('marked-mine').addClass('maybe-mine');
+      minesLeft++;
+      updateMinesLeft();
+      return;
+    }
+    if (target.hasClass('maybe-mine')) {
+      target.removeClass('maybe-mine');
+      updateMinesLeft();
+      return;
+    }
+
+    target.addClass('marked-mine');
+    minesLeft--;
+    if (!timerStarted) {
+      startGame();
+    }
+    updateMinesLeft();
+  }
+
+  function middleClick(tileId) {
+    newGameImageChange('uh-oh');
+    let target = $('#' + tileId);
+    if (target.hasClass('tile-released') && (target.hasClass('nmc-1') || target.hasClass('nmc-2') || target.hasClass('nmc-3') || target.hasClass('nmc-4') || target.hasClass('nmc-5') || target.hasClass('nmc-6') || target.hasClass('nmc-7') || target.hasClass('nmc-8'))) {
+      let noOfCloseMines = 0;
+      const classList = target.attr('class').split(' ');
+      $.each(classList, function (index, value) {
+        if (value.indexOf('nmc-') !== -1) {
+          noOfCloseMines = parseInt(value.replace('nmc-', ''));
+        }
+      });
+      if (noOfCloseMines <= countMarkedNeighbourMines(tileId)) {
+        releaseTilesNotMarked(tileId);
+      }
+    }
+  }
+
+  function mousedown(e) {
+    if (e.which === 1) {
+      if ($(this).hasClass('tile-initialised')) {
+        $(this).removeClass('tile-initialised');
+        const currentTileId = $(this).attr('id');
+        $(this).mouseleave(function () {
+          setTimeout(function () {
+            let target = $('#' + currentTileId);
+            if (!target.hasClass('tile-released')) {
+              target.addClass('tile-initialised');
+            }
+          }, 15);
+        });
+      }
+    }
+  }
+
+  function mouseup(e) {
+    const tileId = parseInt($(this).attr('id'));
+    let difference = 0,
+      msDifference = 0;
+    switch (parseInt(e.which)) {
+      case 1:
+        if ($(this).hasClass('tile-initialised')) {
+          $(this).removeClass('tile-initialised');
+        }
+        leftClickTimeStamp = new Date().getTime();
+        if (rightClickTimeStamp !== -1) {
+          difference = leftClickTimeStamp - rightClickTimeStamp;
+        }
+        if (difference > 0 && difference < 21) {
+          middleClick(tileId);
+          break;
+        }
+        setTimeout(function () {
+          if (rightClickTimeStamp !== -1) {
+            msDifference = rightClickTimeStamp - leftClickTimeStamp;
+          }
+          if (msDifference > 0 && msDifference < 21) {
+            middleClick(tileId);
+            return;
+          }
+          leftClick(tileId);
+        }, 20);
+        break;
+      case 3:
+        rightClickTimeStamp = new Date().getTime();
+        if (leftClickTimeStamp !== -1) {
+          difference = rightClickTimeStamp - leftClickTimeStamp;
+        }
+        if (difference <= 0 || difference > 20) {
+          setTimeout(function () {
+            if (leftClickTimeStamp !== -1) {
+              msDifference = leftClickTimeStamp - rightClickTimeStamp;
+            }
+            if (msDifference <= 0 || msDifference > 20) {
+              rightClick(tileId);
+            }
+          }, 20);
+        }
+        break;
+      default:
+        middleClick(tileId);
+    }
+  }
+
+  function setMineClickAction() {
+    elements.tiles.on({
+      mousedown: mousedown,
+      mouseup: mouseup
+    });
+  }
+
+  function setRandomMines() {
+    setMines = [];
+    while (countNoOfMines < noOfMines) {
+      const randomTileId = Math.floor(Math.random() * noOfTiles) + 1;
+      if (setMines.length > 0) {
+        let alreadyExists = false;
+        for (let mine of setMines) {
+          if (mine === randomTileId) {
+            alreadyExists = true;
+            break;
+          }
+        }
+        if (!alreadyExists) {
+          setMines[countNoOfMines] = randomTileId;
+          countNoOfMines++;
+        }
+        continue;
+      }
+      setMines[0] = randomTileId;
+      countNoOfMines++;
+    }
+  }
+
+  function changeMinefieldClass(nextGameType) {
+    if (elements.minefield.attr('class') !== undefined) {
+      elements.minefield.attr('class', '');
+    }
+    elements.minefield.addClass(nextGameType);
+  }
+
+  function changeHeaderClass(nextHeaderType) {
+    if (elements.header.attr('class') !== undefined) {
+      elements.header.attr('class', '');
+    }
+    elements.header.addClass(nextHeaderType);
+  }
+
+  function buildMineField() {
+    elements.headerInfo.empty().append('<div id="unmarked-mines" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>' + '<div id="new-game-icon"><img src="img/new-game-happy.png" /></div><div id="timer" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>');
+    elements.minefield.empty();
+    switch (gameType) {
+      case 2:
+        changeMinefieldClass('intermediate');
+        changeHeaderClass('header-beg-int');
+        break;
+      case 3:
+        changeMinefieldClass('advanced');
+        changeHeaderClass('header-advanced');
+        break;
+      default:
+        changeMinefieldClass('beginner');
+        changeHeaderClass('header-beg-int');
+    }
+    updateMinesLeft();
+    for (var i = 1; i <= noOfTiles; i++) {
+      elements.minefield.append('<div id="' + i + '" class="tile tile-initialised"></div>');
+    }
+    elements.tiles.addClass('tile-initialised');
+    elements.tiles = $('.tile');
+    setRandomMines();
+    setMineClickAction();
+    positionGame();
+  }
+
+  function initialiseGame(gameLevel) {
+    if (elements.veil.length > 0) {
+      $('#veil,#veil-text').remove();
+      elements.veil = undefined;
+      elements.veilText = undefined;
+    }
+    if (timerStarted) {
+      stopTimer();
+      timerId = null;
+    }
+    gameType = gameLevel;
+    elements.optionsDropdown.find('.selected').removeClass('selected');
+    switch (gameLevel) {
+      case 2:
+        countAcross = 16;
+        countDown = 16;
+        noOfMines = 40;
+        elements.body.attr('class', 'body-min-height-int-adv');
+        $('#intermediate').addClass('selected');
+        break;
+      case 3:
+        countAcross = 30;
+        countDown = 16;
+        noOfMines = 99;
+        elements.body.attr('class', 'body-min-height-int-adv');
+        $('#advanced').addClass('selected');
+        break;
+      default:
+        countAcross = 8;
+        countDown = 8;
+        noOfMines = 10;
+        elements.body.attr('class', 'body-min-height-beginner');
+        $('#beginner').addClass('selected');
+    }
+    noOfTiles = countAcross * countDown;
+    minesLeft = noOfMines;
+    countNoOfMines = 0;
+    timerStarted = false;
+    timer = 0;
+    releasedTiles = [];
+    releasedTilesCount = 0;
+    leftClickTimeStamp = -1;
+    rightClickTimeStamp = -1;
+    buildMineField();
+  }
+
+  function preloadImage(src) {
+    let img = $('<img src="" />');
+    img.attr('src', src);
+    img.attr('class', 'hidden');
+    elements.body.append(img);
+  }
+
+  function preloadImages() {
+    for (let i = 2; i < 10; i++) {
+      preloadImage('img/' + i + '.png');
+    }
+    preloadImage('img/maybe-mine.png');
+    preloadImage('img/mine-found.png');
+    preloadImage('img/mine-wrong.png');
+    preloadImage('img/new-game-sad.png');
+    preloadImage('img/new-game-uh-oh.png');
+  }
+
+  function newGameAction() {
+    elements.optionsDropdown.hide();
+    initialiseGame(gameType);
+  }
+
+  function clickOptionAction(e) {
+    e.stopPropagation();
+    if (elements.optionsDropdown.is(':visible')) {
+      elements.optionsDropdown.slideUp('fast');
+      return;
+    }
+    elements.optionsDropdown.slideDown('fast');
+  }
+
+  function repositionGame() {
+    positionGame();
+    positionVeil();
+  }
+
+  function changeGameType() {
+    elements.optionsDropdown.hide();
+    initialiseGame(parseInt($(this).attr('data-game-type')));
+  }
+
+  function stopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  function hideOptions() {
+    if (elements.optionsDropdown.is(':visible')) {
+      elements.optionsDropdown.slideUp('fast');
+    }
+  }
+
+  function setListeners() {
+    $(document).on('click', '#new-game-icon', newGameAction);
+    $(document).on('click', '#new-game', newGameAction);
+    $(document).on('click', '[data-game-type]', changeGameType);
+    $(document).on('click', '#options', clickOptionAction);
+    $(document).on('click', '.swp', stopPropagation);
+    $(document).on('click', hideOptions);
+    $(window).resize(repositionGame);
+    elements.body.bind('contextmenu', function () {
+      return false;
+    });
+    elements.body.attr('unselectable', 'on').css('UserSelect', 'none').css('MozUserSelect', 'none').on('selectstart', false);
+  }
+
+  self.init = function () {
+    preloadImages();
+    initialiseGame(1);
+    setListeners();
+    return self;
+  };
+
+  return self;
+};
+
+$(document).ready(function () {
+  (new Minesweeper()).init();
+});
