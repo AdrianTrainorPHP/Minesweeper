@@ -1,0 +1,25 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "Minesweeper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss-compile": "node-sass -rw resources/scss -o dist/css",
+    "watch": "npm run scss-compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://AdrianTrainorPHP@github.com/AdrianTrainorPHP/Minesweeper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdrianTrainorPHP/Minesweeper/issues"
+  },
+  "homepage": "https://github.com/AdrianTrainorPHP/Minesweeper#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "node-sass": "^4.14.1"
+  }
+}
