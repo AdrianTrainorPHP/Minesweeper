@@ -1,0 +1,187 @@
+html, body, div, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, input, hr {
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, pre, code, address, caption, cite, code, em, strong, th {
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal; }
+
+ul, ol {
+  list-style: none; }
+
+fieldset, img, hr {
+  border: none; }
+
+caption, th {
+  text-align: left; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+td {
+  vertical-align: top; }
+
+body {
+  font-family: Andalus;
+  cursor: default; }
+  body.body-min-height-beginner {
+    min-height: 540px; }
+  body.body-min-height-int-adv {
+    min-height: 790px; }
+  body #game {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    min-width: 512px;
+    max-width: 960px;
+    padding: 20px;
+    background-color: #EDEDED; }
+    body #game #minefield {
+      margin: 0 auto;
+      border: 1px solid #B2B2B2; }
+  body #veil {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    background-color: #000000;
+    opacity: 0.5; }
+    body #veil #veil-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 51;
+      text-align: center;
+      width: 256px;
+      color: #04FE04;
+      font-weight: bolder;
+      font-size: 32px; }
+  body .hidden {
+    display: none; }
+  body .beginner {
+    width: 256px;
+    height: 256px; }
+  body .intermediate {
+    width: 512px;
+    height: 512px; }
+  body .advanced {
+    width: 960px;
+    height: 512px; }
+  body #header {
+    height: 110px; }
+  body .header-beg-int {
+    width: 512px; }
+  body .header-advanced {
+    width: 960px; }
+  body #header-menu {
+    background-color: #D4D4D4;
+    width: 98%;
+    height: 27px;
+    padding: 5px; }
+  body #options {
+    text-align: center;
+    width: 120px;
+    cursor: pointer;
+    background-color: #EDEDED; }
+    body #options:hover {
+      background-color: #A8FFFF; }
+  body .option-menu-visible {
+    background-color: #A8FFFF; }
+  body #options-drop-down {
+    position: fixed;
+    margin-top: 5px;
+    width: 100px;
+    background-color: white;
+    z-index: 1000;
+    cursor: pointer;
+    padding: 10px; }
+    body #options-drop-down ul li {
+      padding-left: 10px;
+      margin-bottom: 2px; }
+      body #options-drop-down ul li:hover, body #options-drop-down ul li.selected {
+        background-color: #A8FFFF; }
+  body #new-game-icon {
+    margin-top: 15px;
+    margin-left: 46%;
+    cursor: pointer; }
+  body #header-info {
+    width: 100%; }
+  body #unmarked-mines {
+    float: left;
+    margin-top: -5px; }
+  body #timer {
+    float: right;
+    margin-top: -50px; }
+  body .digital-numbers {
+    background-color: #000000;
+    width: 92px; }
+    body .digital-numbers img {
+      margin-top: 5px;
+      margin-left: 5px; }
+  body .tile {
+    float: left;
+    height: 32px;
+    width: 32px; }
+    body .tile.tile-released {
+      height: 30px;
+      width: 30px;
+      border: 1px solid #B2B2B2;
+      font-weight: bolder;
+      font-size: 23px;
+      text-align: center; }
+    body .tile.tile-initialised {
+      background-image: url("../../img/tile-initialised.png");
+      background-repeat: no-repeat;
+      cursor: pointer; }
+    body .tile.mine-found {
+      background-image: url("../../img/mine-found.png");
+      background-repeat: no-repeat;
+      cursor: auto; }
+    body .tile.marked-mine {
+      background-image: url("../../img/marked-mine.png");
+      background-repeat: no-repeat; }
+    body .tile.mine-wrong {
+      background-image: url("../../img/mine-wrong.png");
+      background-repeat: no-repeat; }
+    body .tile.maybe-mine {
+      background-image: url("../../img/maybe-mine.png");
+      background-repeat: no-repeat; }
+    body .tile.nmc-1 {
+      color: #0000FF; }
+    body .tile.nmc-2 {
+      color: #008000; }
+    body .tile.nmc-3 {
+      color: #FF0000; }
+    body .tile.nmc-4 {
+      color: #0000A0; }
+    body .tile.nmc-5 {
+      color: #800000; }
+    body .tile.nmc-6 {
+      color: #43C6DB; }
+    body .tile.nmc-7 {
+      color: #000000; }
+    body .tile.nmc-8 {
+      color: #808080; }
+  body footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    width: 100%;
+    height: 60px;
+    background-color: #A61212;
+    color: #DEDEDE; }
+  body #publisher {
+    width: 100%;
+    text-align: center; }
+    body #publisher a {
+      color: #FFFFFF; }
+      body #publisher a:hover {
+        color: #DEDEDE; }
+  body #publisher-img img {
+    padding-top: 10px;
+    margin-top: -10px;
+    width: 30px;
+    height: 30px; }
