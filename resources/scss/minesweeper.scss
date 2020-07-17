@@ -34,18 +34,18 @@ body {
     z-index: 50;
     background-color: #000000;
     opacity: 0.5;
-
-    #veil-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 51;
-      text-align: center;
-      width: 256px;
-      color: #04FE04;
-      font-weight: bolder;
-      font-size: 32px;
-    }
+  }
+  
+  #veil-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 51;
+    text-align: center;
+    width: 256px;
+    color: #04FE04;
+    font-weight: bolder;
+    font-size: 32px;
   }
 
   .hidden {
