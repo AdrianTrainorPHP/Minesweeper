@@ -53,10 +53,10 @@ const Minesweeper = function () {
         elements.images.each(function () {
           mineCounter++;
           if (mineCounter < 3) {
-            $(this).attr('src', 'img/0.png');
+            $(this).attr('src', 'dist/img/0.png');
             return;
           }
-          $(this).attr('src', 'img/' + minesLeft + '.png');
+          $(this).attr('src', 'dist/img/' + minesLeft + '.png');
         });
         break;
       case 2:
@@ -65,27 +65,27 @@ const Minesweeper = function () {
         elements.images.each(function () {
           mineCounter++;
           if (mineCounter < 2) {
-            $(this).attr('src', 'img/0.png');
+            $(this).attr('src', 'dist/img/0.png');
             return;
           }
-          $(this).attr('src', 'img/' + digitsMinesLeft[mineCounter - 2] + '.png');
+          $(this).attr('src', 'dist/img/' + digitsMinesLeft[mineCounter - 2] + '.png');
         });
         break;
       default:
         digitsMinesLeft = minesLeft.toString().split('');
         mineCounter = 0;
         elements.images.each(function () {
-          $(this).attr('src', 'img/' + digitsMinesLeft[mineCounter] + '.png');
+          $(this).attr('src', 'dist/img/' + digitsMinesLeft[mineCounter] + '.png');
           mineCounter++;
         });
     }
   }
 
   function newGameImageChange(face) {
-    $('#new-game-icon img').attr('src', 'img/new-game-' + face + '.png');
+    $('#new-game-icon img').attr('src', 'dist/img/new-game-' + face + '.png');
     if (face === 'uh-oh') {
       setTimeout(function () {
-        $('#new-game-icon img').attr('src', 'img/new-game-happy.png');
+        $('#new-game-icon img').attr('src', 'dist/img/new-game-happy.png');
       }, 100);
     }
   }
@@ -101,26 +101,26 @@ const Minesweeper = function () {
         third = $('#timer img:nth-child(3)');
       switch (timer.toString().length) {
         case 1:
-          first.attr('src', 'img/0.png');
-          second.attr('src', 'img/0.png');
-          third.attr('src', 'img/' + timer + '.png');
+          first.attr('src', 'dist/img/0.png');
+          second.attr('src', 'dist/img/0.png');
+          third.attr('src', 'dist/img/' + timer + '.png');
           break;
         case 2:
           digits = timer.toString().split('');
-          first.attr('src', 'img/0.png');
-          second.attr('src', 'img/' + digits[0] + '.png');
-          third.attr('src', 'img/' + digits[1] + '.png');
+          first.attr('src', 'dist/img/0.png');
+          second.attr('src', 'dist/img/' + digits[0] + '.png');
+          third.attr('src', 'dist/img/' + digits[1] + '.png');
           break;
         case 3:
           digits = timer.toString().split('');
-          first.attr('src', 'img/' + digits[0] + '.png');
-          second.attr('src', 'img/' + digits[1] + '.png');
-          third.attr('src', 'img/' + digits[2] + '.png');
+          first.attr('src', 'dist/img/' + digits[0] + '.png');
+          second.attr('src', 'dist/img/' + digits[1] + '.png');
+          third.attr('src', 'dist/img/' + digits[2] + '.png');
           break;
         default:
           stopTimer();
           $('#timer img').each(function () {
-            $(this).attr('src', 'img/9.png');
+            $(this).attr('src', 'dist/img/9.png');
           });
       }
     }, 1000);
@@ -665,7 +665,7 @@ const Minesweeper = function () {
   }
 
   function buildMineField() {
-    elements.headerInfo.empty().append('<div id="unmarked-mines" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>' + '<div id="new-game-icon"><img src="img/new-game-happy.png" /></div><div id="timer" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>');
+    elements.headerInfo.empty().append('<div id="unmarked-mines" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="dist/img/0.png" /></div>' + '<div id="new-game-icon"><img src="dist/img/new-game-happy.png" /></div><div id="timer" class="digital-numbers"><img src="img/0.png" /><img src="img/0.png" /><img src="img/0.png" /></div>');
     elements.minefield.empty();
     switch (gameType) {
       case 2:
@@ -746,13 +746,13 @@ const Minesweeper = function () {
 
   function preloadImages() {
     for (let i = 2; i < 10; i++) {
-      preloadImage('img/' + i + '.png');
+      preloadImage('dist/img/' + i + '.png');
     }
-    preloadImage('img/maybe-mine.png');
-    preloadImage('img/mine-found.png');
-    preloadImage('img/mine-wrong.png');
-    preloadImage('img/new-game-sad.png');
-    preloadImage('img/new-game-uh-oh.png');
+    preloadImage('dist/img/maybe-mine.png');
+    preloadImage('dist/img/mine-found.png');
+    preloadImage('dist/img/mine-wrong.png');
+    preloadImage('dist/img/new-game-sad.png');
+    preloadImage('dist/img/new-game-uh-oh.png');
   }
 
   function newGameAction() {

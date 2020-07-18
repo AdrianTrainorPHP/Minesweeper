@@ -167,29 +167,29 @@ body {
     }
 
     &.tile-initialised {
-      background-image: url('../../img/tile-initialised.png');
+      background-image: url('../../dist/img/tile-initialised.png');
       background-repeat: no-repeat;
       cursor: pointer;
     }
 
     &.mine-found {
-      background-image: url('../../img/mine-found.png');
+      background-image: url('../../dist/img/mine-found.png');
       background-repeat: no-repeat;
       cursor: auto;
     }
 
     &.marked-mine {
-      background-image: url('../../img/marked-mine.png');
+      background-image: url('../../dist/img/marked-mine.png');
       background-repeat: no-repeat;
     }
 
     &.mine-wrong {
-      background-image: url('../../img/mine-wrong.png');
+      background-image: url('../../dist/img/mine-wrong.png');
       background-repeat: no-repeat;
     }
 
     &.maybe-mine {
-      background-image: url('../../img/maybe-mine.png');
+      background-image: url('../../dist/img/maybe-mine.png');
       background-repeat: no-repeat;
     }
 
