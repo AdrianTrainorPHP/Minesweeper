@@ -788,7 +788,7 @@ const Minesweeper = function () {
 
   function setListeners() {
     $(document).on('click', '#new-game-icon', newGameAction);
-    $(document).on('click', '#new-game', newGameAction);
+    $(document).on('click', '[data-new-game]', newGameAction);
     $(document).on('click', '[data-game-type]', changeGameType);
     $(document).on('click', '#options', clickOptionAction);
     $(document).on('click', hideOptions);
